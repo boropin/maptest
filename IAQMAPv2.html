@@ -157,11 +157,14 @@ request.onload = () => {
             data[0].z[i] = obj[i-1].co2;
         };
         if(num ==3){
-            data[0].z[i] = obj[i-1].wbgt;
+            //data[0].z[i] = obj[i-1].wbgt;
             var tmp = obj[i-1].temperature;
             var hum = obj[i-1].relativeHumidity;
-            data[0].z[i] = Math.round( (0.725 * tmp + 0.0368 * hum + 0.00364 * tmp * hum - 3.246 ) * 10 )/10;
-        };
+            if(tmp == '' || hum == ''){
+                data[0].z[i] = 0;
+            } else {
+                data[0].z[i] = Math.round( (0.725 * tmp + 0.0368 * hum + 0.00364 * tmp * hum - 3.246 ) * 10 )/10;
+            };
         if(num ==4){
 //            data[0].z[i] = obj[i-1].PM2_5 | 100;
             data[0].z[i] = obj[i-1].PM2_5 |'' ;
