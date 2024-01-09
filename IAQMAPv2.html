@@ -12,13 +12,12 @@ function LoadProc() {
 const param = Object.fromEntries(new URLSearchParams(window.location.search));
 
 var da = param.da;
-var x =  param.x.split(',').map(Number);
+var x = param.x.split(',').map(Number);
 var y = param.y.split(',').map(Number);
-var z =  param.z.split(',');
+var z = param.z.split(',');
 var pwidth = Number(param.pwidth);
 var pheight = Number(param.pheight);
 var iaqurl = param.iaqurl;
-
 
 var pmargin = 50;
 
@@ -67,12 +66,13 @@ x1.shift();
 y1.shift();
 x1.pop();
 y1.pop();
+var text = x1.concat();
+
 
 var data = [{
     x: x,
     y: y,
     z: z,
-    label: ['','','','','','','','','','','',''],
 
     type: 'contour',
     contours: {
@@ -95,12 +95,21 @@ var data = [{
 {
     x: x1,
     y: y1,
+    text: text,
+
     type: 'scatter',
-    mode: "markers",
+    mode: "markers+text",
+
+    textposition: 'top center',
+    textfont : {
+      family: 'Courier New, monospace',
+      size: 12,
+      color: 'dark gray'
+    },
 
     marker: {
       color: 'white',
-      size: 5,
+      size: 6,
       line: {
         color: 'black',
         width: 1
@@ -109,8 +118,6 @@ var data = [{
     name: 'Plot',
 
 }];
-
-
 
 
 var layout = {
@@ -127,8 +134,7 @@ var layout = {
         ticks: 'outside',
         title:'y[m]',
         showticklabels: true
-    }
-
+    },
 };
 
 var request = new XMLHttpRequest();
@@ -206,8 +212,8 @@ request.onload = () => {
             data[0].z[i] = obj[i-1].UVIndex;
             
         };
-        //console.log(i, data[0].x[i], data[0].y[i], data[0].z[i],data[0].label[i]);
-
+        data[1].text[i-1] = obj[i-1].sensorName;
+        //data[1].text[i-1] = data[0].z[i];
     }
 
     Plotly.newPlot('graph', data, layout, {displayModeBar: true});
