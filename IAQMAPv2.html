@@ -138,11 +138,27 @@ request.send();
 request.onload = () => {
     const jsonData = request.response;
     const datastr = JSON.stringify(jsonData,null,'    ');
-    //console.log(datastr);
-
     const obj = JSON.parse(datastr);
 
-    //console.log(data[0].x[11], data[0].y[11], data[0].z[11]);
+    //  link
+    for(var i=0;i<das.length;i++){
+       var da2 = das[i];
+       var params2 = {
+           da: da2,
+           x: x,
+           y: y,
+           z: z,
+           pwidth : pwidth,
+           pheight : pheight,
+           iaqurl: iaqurl
+       }
+
+       var urlSearchParam2 =  new URLSearchParams(params2).toString();
+       var tag2 = document.getElementById(das[i]);
+
+       tag2.href = "IAQMAPv2.html?" + urlSearchParam2;
+       
+    }
 
 
     for (var i = 1; i < (obj.length)+1; i++){
@@ -198,27 +214,6 @@ request.onload = () => {
     var Min = now.getMinutes();
     var Sec = now.getSeconds();
     target.innerHTML = Year + "/" + Month + "/" + Date + " " + Hour + ":" + Min + ":" + Sec+" update.";
-
-
-    //  link
-    for(var i=0;i<das.length;i++){
-       var da2 = das[i];
-       var params2 = {
-           da: da2,
-           x: x,
-           y: y,
-           z: z,
-           pwidth : pwidth,
-           pheight : pheight,
-           iaqurl: iaqurl
-       }
-
-       var urlSearchParam2 =  new URLSearchParams(params2).toString();
-       var tag2 = document.getElementById(das[i]);
-
-       tag2.href = "IAQMAPv2.html?" + urlSearchParam2;
-       
-    }
     
     setTimeout(function () {
         location.reload();
