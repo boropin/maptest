@@ -160,6 +160,15 @@ request.onload = () => {
        
     }
 
+    var target = document.getElementById("DateTimeDisp");
+
+    var Year = now.getFullYear();
+    var Month = now.getMonth()+1;
+    var Date = now.getDate();
+    var Hour = now.getHours();
+    var Min = now.getMinutes();
+    var Sec = now.getSeconds();
+    target.innerHTML = Year + "/" + Month + "/" + Date + " " + Hour + ":" + Min + ":" + Sec+" update.";
 
     for (var i = 1; i < (obj.length)+1; i++){
 
@@ -197,23 +206,11 @@ request.onload = () => {
             data[0].z[i] = obj[i-1].UVIndex;
             
         };
+        //console.log(i, data[0].x[i], data[0].y[i], data[0].z[i],data[0].label[i]);
 
-
-        data[0].label[i] = obj[i-1].sensorName;
-        console.log(i, data[0].x[i], data[0].y[i], data[0].z[i],data[0].label[i]);
     }
 
     Plotly.newPlot('graph', data, layout, {displayModeBar: true});
-
-    var target = document.getElementById("DateTimeDisp");
-
-    var Year = now.getFullYear();
-    var Month = now.getMonth()+1;
-    var Date = now.getDate();
-    var Hour = now.getHours();
-    var Min = now.getMinutes();
-    var Sec = now.getSeconds();
-    target.innerHTML = Year + "/" + Month + "/" + Date + " " + Hour + ":" + Min + ":" + Sec+" update.";
     
     setTimeout(function () {
         location.reload();
