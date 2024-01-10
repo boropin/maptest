@@ -102,9 +102,9 @@ var data = [{
 
     textposition: 'top center',
     textfont : {
-      family: 'Courier New, monospace',
+      family: 'monospace',
       size: 12,
-      color: 'dark gray'
+      color: 'white',
     },
 
     marker: {
@@ -112,7 +112,7 @@ var data = [{
       size: 6,
       line: {
         color: 'black',
-        width: 1
+        width: 1.0
       }
     },
     name: 'Plot',
@@ -212,7 +212,7 @@ request.onload = () => {
             data[0].z[i] = obj[i-1].UVIndex;
             
         };
-        data[1].text[i-1] = obj[i-1].sensorName;
+        data[1].text[i-1] = '<b style=\"text-shadow: 1px 1px #000000, 1px -1px #000000, -1px 1px #000000, -1px -1px #000000\">' + obj[i-1].sensorName + '</b>';
         //data[1].text[i-1] = data[0].z[i];
     }
 
