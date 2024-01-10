@@ -102,9 +102,9 @@ var data = [{
 
     textposition: 'top center',
     textfont : {
-      family: 'monospace',
+      family: 'meirio',
       size: 12,
-      color: 'white',
+      color: 'black',
     },
 
     marker: {
@@ -112,7 +112,7 @@ var data = [{
       size: 6,
       line: {
         color: 'black',
-        width: 1.0
+        width: 1.5
       }
     },
     name: 'Plot',
@@ -124,7 +124,6 @@ var layout = {
     height: height,
     width: width,
     title: '<B>IAQ Contour Map / '+danames[num]+'</B>',
-
     xaxis: {
         ticks: 'outside',
         title:'x[m]',
@@ -212,7 +211,7 @@ request.onload = () => {
             data[0].z[i] = obj[i-1].UVIndex;
             
         };
-        data[1].text[i-1] = '<b style=\"text-shadow: 1px 1px #000000, 1px -1px #000000, -1px 1px #000000, -1px -1px #000000\">' + obj[i-1].sensorName + '</b>';
+        data[1].text[i-1] = '<span style=\"color: #ffffff; text-shadow: 1.5px 1.5px #000000, 1px -1px #000000, -1px 1px #000000, -1px -1px #000000\">' + obj[i-1].sensorName + '</b>';
         //data[1].text[i-1] = data[0].z[i];
     }
 
