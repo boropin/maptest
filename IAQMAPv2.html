@@ -215,7 +215,7 @@ request.onload = () => {
         //data[1].text[i-1] = data[0].z[i];
     }
 
-    Plotly.newPlot('graph', data, layout, {displayModeBar: true});
+    Plotly.newPlot('graph', data, layout, {displayModeBar: true, scrollZoom: true, pan: true});
     
     setTimeout(function () {
         location.reload();
