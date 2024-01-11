@@ -28,7 +28,7 @@ var height = pheight + 3.5 * pmargin;
 var das = ['tmp','hum','co2','wbgt','pm25','voc','press','uv'];
 var danames = ['Temperature','Relative Humidity','CO2','WBGT','PM2.5','VOC Index','Barometric Pressure','UV Index'];
 
-var ncontours  = [180,180,60,180,60,30,180,90];
+var ncontours  = [45,45,45,45,30,30,30,90];
 var colorscale = [
   'Jet',
    [
@@ -77,7 +77,6 @@ var data = [{
     type: 'contour',
     contours: {
         showlabels: true,
-
     },
     ncontours: ncontours[num],
     colorscale: colorscale[num],
@@ -88,7 +87,7 @@ var data = [{
     zmin:  zmin[num],
     zmax:  zmax[num],
     line:{
-        smoothing: 1,
+        smoothing: 1.0,
     },
     name: 'Point',
 },
