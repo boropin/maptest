@@ -124,6 +124,7 @@ var layout = {
     height: height,
     width: width,
     title: '<B>IAQ Contour Map / '+danames[num]+'</B>',
+    dragmode: 'pan',
     xaxis: {
         ticks: 'outside',
         title:'x[m]',
@@ -215,7 +216,8 @@ request.onload = () => {
         //data[1].text[i-1] = data[0].z[i];
     }
 
-    Plotly.newPlot('graph', data, layout, {displayModeBar: true, scrollZoom: true, pan: true});
+    Plotly.newPlot('graph', data, layout, {displayModeBar: true, scrollZoom: true});
+
     
     setTimeout(function () {
         location.reload();
