@@ -31,7 +31,7 @@ var height = pheight + 3.5 * pmargin;
 var das = ['tmp','hum','co2','wbgt','pm25','voc','press','uv'];
 var danames = ['Temperature','Relative Humidity','CO2','WBGT','PM2.5','VOC Index','Barometric Pressure','UV Index'];
 
-var ncontours  = [45,45,45,45,30,30,90,90];
+var ncontours  = [50,50,50,50,30,30,90,90];
 var colorscale = [
   'Jet',
    [
@@ -49,8 +49,8 @@ var colorscale = [
   'Jet','Jet','Jet','Jet','Jet','Jet'
 ];
 
-var zmin = [5 ,  0, 400, 0,  0,   0, 800, 0];
-var zmax = [45,100,1500,40,200,5000,1200,11];
+var zmin = [0 ,  5, 400, 0,  0,   0, 800, 0];
+var zmax = [45,100,1500,45,200,5000,1200,11];
 
 
 var num = das.indexOf(da);
