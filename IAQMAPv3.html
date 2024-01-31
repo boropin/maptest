@@ -1,282 +1,262 @@
 <head>
-<title>IAQ Contour Map</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>IAQ Contour Map</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        // (c) Katsuhiko Araki 2023/12/13
 
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-<script>
-// (c) Katsuhiko Araki 2023/12/13
+        function LoadProc() {
 
-var now = new Date();
-function LoadProc() {
+            const param = Object.fromEntries(new URLSearchParams(window.location.search));
 
-const param = Object.fromEntries(new URLSearchParams(window.location.search));
+            var da = param.da;
+            var x = param.x.split(',').map(Number);
+            var y = param.y.split(',').map(Number);
+            var z = param.z.split(',');
+            var pwidth = Number(param.pwidth);
+            var pheight = Number(param.pheight);
+            var iaqurl = param.iaqurl;
+            var xb = param.xb.split(',').map(Number);
+            var yb = param.yb.split(',').map(Number);
 
-var da = param.da;
-var x = param.x.split(',').map(Number);
-var y = param.y.split(',').map(Number);
-var z = param.z.split(',');
-var pwidth = Number(param.pwidth);
-var pheight = Number(param.pheight);
-var iaqurl = param.iaqurl;
-var xb = param.xb.split(',').map(Number);
-var yb = param.yb.split(',').map(Number);
+            var pmargin = 50;
 
+            var width = pwidth + 4.6 * pmargin;
+            var height = pheight + 3.5 * pmargin;
 
-var pmargin = 50;
+            var das = ['tmp', 'hum', 'co2', 'wbgt', 'pm25', 'voc', 'press', 'uv'];
+            var danames = ['Temperature', 'Relative Humidity', 'CO2', 'WBGT', 'PM2.5', 'VOC Index', 'Barometric Pressure', 'UV Index'];
 
-var width = pwidth + 4.6 * pmargin;
-var height = pheight + 3.5 * pmargin;
+            var ncontours = [50, 50, 50, 50, 30, 30, 90, 90];
+            var colorscale = ['Jet', [['0.0', 'rgb(165,0,38)'], ['0.111111111111', 'rgb(215,48,39)'], ['0.222222222222', 'rgb(244,109,67)'], ['0.333333333333', 'rgb(253,174,97)'], ['0.444444444444', 'rgb(254,224,144)'], ['0.555555555556', 'rgb(224,243,248)'], ['0.666666666667', 'rgb(171,217,233)'], ['0.777777777778', 'rgb(116,173,209)'], ['0.888888888889', 'rgb(69,117,180)'], ['1.0', 'rgb(49,54,149)']], 'Jet', 'Jet', 'Jet', 'Jet', 'Jet', 'Jet'];
 
+            var zmin = [0, 5, 400, 0, 0, 0, 800, 0];
+            var zmax = [45, 100, 1500, 45, 200, 5000, 1200, 11];
 
-var das = ['tmp','hum','co2','wbgt','pm25','voc','press','uv'];
-var danames = ['Temperature','Relative Humidity','CO2','WBGT','PM2.5','VOC Index','Barometric Pressure','UV Index'];
-
-var ncontours  = [50,50,50,50,30,30,90,90];
-var colorscale = [
-  'Jet',
-   [
-      ['0.0', 'rgb(165,0,38)'],
-      ['0.111111111111', 'rgb(215,48,39)'],
-      ['0.222222222222', 'rgb(244,109,67)'],
-      ['0.333333333333', 'rgb(253,174,97)'],
-      ['0.444444444444', 'rgb(254,224,144)'],
-      ['0.555555555556', 'rgb(224,243,248)'],
-      ['0.666666666667', 'rgb(171,217,233)'],
-      ['0.777777777778', 'rgb(116,173,209)'],
-      ['0.888888888889', 'rgb(69,117,180)'],
-      ['1.0', 'rgb(49,54,149)']
-    ],
-  'Jet','Jet','Jet','Jet','Jet','Jet'
-];
-
-var zmin = [0 ,  5, 400, 0,  0,   0, 800, 0];
-var zmax = [45,100,1500,45,200,5000,1200,11];
-
-
-var num = das.indexOf(da);
-if ( num == -1){
-    num = 0;
-}
-
-
-console.log(num);
-
-
-var x1=x.concat();
-var x1=x.concat();
-var y1=y.concat();
-x1.shift();
-y1.shift();
-x1.pop();
-y1.pop();
-var text = x1.concat();
-
-
-var data = [{
-    x: x,
-    y: y,
-    z: z,
-
-    type: 'contour',
-    contours: {
-        showlabels: true,
-    },
-    ncontours: ncontours[num],
-    colorscale: colorscale[num],
-    showscale: true,
-    autocontour: true,
-    
-    
-    zmin:  zmin[num],
-    zmax:  zmax[num],
-    line:{
-        smoothing: 1.2,
-    },
-    name: 'Point',
-},
-{
-    x: xb, 
-    y: yb,
-    fill: 'toself',
-    fillcolor : 'white',
-    mode: 'lines',
-    line: {
-      color: 'gray',
-      width: 0.5
-    },
-    name: 'Space',
-
-},
-{
-    x: x1,
-    y: y1,
-    text: text,
-
-    type: 'scatter',
-    mode: "markers+text",
-
-    textposition: 'top center',
-    textfont : {
-      family: 'meirio',
-      size: 12,
-      color: 'black',
-    },
-
-    marker: {
-      color: 'white',
-      size: 6,
-      line: {
-        color: 'black',
-        width: 1.5
-      }
-    },
-    name: 'Plot',
-}];
-
-
-var layout = {
-    height: height,
-    width: width,
-    title: '<B>IAQ Contour Map / '+danames[num]+'</B>',
-    dragmode: 'pan',
-    xaxis: {
-        ticks: 'outside',
-        title:'x[m]',
-        showticklabels: true 
-    },
-    yaxis: {
-        ticks: 'outside',
-        title:'y[m]',
-        showticklabels: true
-    },
-};
-
-var request = new XMLHttpRequest();
-request.open('GET',iaqurl, true);
-request.responseType = 'json';
-request.send();
-request.onload = () => {
-    const jsonData = request.response;
-    const datastr = JSON.stringify(jsonData,null,'    ');
-    const obj = JSON.parse(datastr);
-    var sensor_list = obj.map(item => item["sensorNumber"]);    //jsonのセンサ順を抽出
-//    console.log(sensorNumber);
-
-
-    //  link
-    for(var i=0;i<das.length;i++){
-       var da2 = das[i];
-       var params2 = {
-           da: da2,
-           x: x,
-           y: y,
-           z: z,
-           pwidth : pwidth,
-           pheight : pheight,
-           iaqurl: iaqurl,
-           xb: xb,
-           yb: yb
-       }
-
-       var urlSearchParam2 =  new URLSearchParams(params2).toString();
-       var tag2 = document.getElementById(das[i]);
-
-       tag2.href = "IAQMAPv3.html?" + urlSearchParam2;
-       
-    }
-
-    var target = document.getElementById("DateTimeDisp");
-
-    var Year = now.getFullYear();
-    var Month = now.getMonth()+1;
-    var Date = now.getDate();
-    var Hour = now.getHours();
-    var Min = now.getMinutes();
-    var Sec = now.getSeconds();
-    target.innerHTML = Year + "/" + Month + "/" + Date + " " + Hour + ":" + Min + ":" + Sec+" update.";
-    var c = Object.keys(obj).length;
-    for (var i = 1; i < c+1; i++){
-
-        var tmpobj = obj.find(s => s.sensorNumber ===  sensor_list[i-1]);     //jsonのセンサ順にセンサ値を読み込み
-
-		//console.log(i+': ' + tmpobj.temperature);
-
-        if(num ==0){
-//            data[0].z[i] = obj[i-1].temperature; 
-            data[0].z[i] = tmpobj.temperature; 
-
-        };
-        if(num ==1){
-//            data[0].z[i] = obj[i-1].relativeHumidity;
-            data[0].z[i] = tmpobj.relativeHumidity;
-
-        };
-        if(num ==2){
-//            data[0].z[i] = obj[i-1].co2;
-            data[0].z[i] = tmpobj.co2;
-        };
-        if(num ==3){
-//            var tmp = obj[i-1].temperature;
-            var tmp = tmpobj.temperature;
-//            var hum = obj[i-1].relativeHumidity;
-            var hum = tmpobj.relativeHumidity;
-            if(tmp == null || hum == null){
-                data[0].z[i] = null;
-            } else {
-                data[0].z[i] = Math.round( (0.725 * tmp + 0.0368 * hum + 0.00364 * tmp * hum - 3.246 ) * 10 )/10;
+            var num = das.indexOf(da);
+            if (num == -1) {
+                num = 0;
             }
-        };
-        if(num ==4){
-//            data[0].z[i] = obj[i-1].PM2_5;
-            data[0].z[i] = tmpobj.PM2_5;
 
-        };
-        if(num ==5){
-//            data[0].z[i] = obj[i-1].tvoc;
-            data[0].z[i] = tmpobj.tvoc;
-        };
-        if(num ==6){
-//            data[0].z[i] = obj[i-1].BarometricPressure;
-            data[0].z[i] = tmpobj.BarometricPressure;
-        };
-        if(num ==7){
-//            data[0].z[i] = obj[i-1].UVIndex;
-            data[0].z[i] = tmpobj.UVIndex;
+            console.log(num);
+
+            var x1 = x.concat();
+            var x1 = x.concat();
+            var y1 = y.concat();
+            x1.shift();
+            y1.shift();
+            x1.pop();
+            y1.pop();
+            var text = x1.concat();
+
+            var data = [{
+                x: x,
+                y: y,
+                z: z,
+
+                type: 'contour',
+                contours: {
+                    showlabels: true,
+                },
+                ncontours: ncontours[num],
+                colorscale: colorscale[num],
+                showscale: true,
+                autocontour: true,
+
+                zmin: zmin[num],
+                zmax: zmax[num],
+                line: {
+                    smoothing: 1.2,
+                },
+                name: 'Point',
+            }, {
+                x: xb,
+                y: yb,
+                fill: 'toself',
+                fillcolor: 'white',
+                mode: 'lines',
+                line: {
+                    color: 'gray',
+                    width: 0.5
+                },
+                name: 'Space',
+
+            }, {
+                x: x1,
+                y: y1,
+                text: text,
+
+                type: 'scatter',
+                mode: "markers+text",
+
+                textposition: 'top center',
+                textfont: {
+                    family: 'meirio',
+                    size: 12,
+                    color: 'black',
+                },
+
+                marker: {
+                    color: 'white',
+                    size: 6,
+                    line: {
+                        color: 'black',
+                        width: 1.5
+                    }
+                },
+                name: 'Plot',
+            }];
+
+            var layout = {
+                height: height,
+                width: width,
+                //title: '<B>IAQ Contour Map / ' + danames[num] + '</B>',
+                dragmode: 'pan',
+                xaxis: {
+                    ticks: 'outside',
+                    title: 'x[m]',
+                    showticklabels: true
+                },
+                yaxis: {
+                    ticks: 'outside',
+                    title: 'y[m]',
+                    showticklabels: true
+                },
+            };
+            //  link
+            for (var i = 0; i < das.length; i++) {
+                var da2 = das[i];
+                var params2 = {
+                    da: da2,
+                    x: x,
+                    y: y,
+                    z: z,
+                    pwidth: pwidth,
+                    pheight: pheight,
+                    iaqurl: iaqurl,
+                    xb: xb,
+                    yb: yb
+                }
+                var urlSearchParam2 = new URLSearchParams(params2).toString();
+                var tag2 = document.getElementById(das[i]);
+                tag2.href = "IAQMAPv3.html?" + urlSearchParam2;
+                if(da==das[i]){
+                    tag2.style = "color:black;background:#FFF;font-weight: bold;border: 1px solid #DDD;padding:10px;font-size: 10pt;";
+                } else {
+                    tag2.style = "color:black;background:lightgray;border: 1px solid #AAA;padding: 8px;";
+                }
+            }
+            drawscreen();
+            setInterval(drawscreen, 300000);
             
-        };
-//        data[2].text[i-1] = '<span style=\"color: #ffffff; text-shadow: 1px 1px #000000, 1px -1px #000000, -1px 1px #000000, -1px -1px #000000\">' + obj[i-1].sensorName + '</b>';
-        data[2].text[i-1] = '<span style=\"color: #ffffff; text-shadow: 1px 1px #000000, 1px -1px #000000, -1px 1px #000000, -1px -1px #000000\">' + tmpobj.sensorName + '</b>';
-
-        //data[1].text[i-1] = data[0].z[i];
-    }
-
-    Plotly.newPlot('graph', data, layout, {displayModeBar: true, scrollZoom: true});
+            function drawscreen(){
+                var now = new Date();
+                console.log('start'+now);
+                var request = new XMLHttpRequest();
+                request.open('GET', iaqurl, true);
+                request.responseType = 'json';
+                request.send();
+                request.onload = ()=>{
+                    const jsonData = request.response;
+                    const datastr = JSON.stringify(jsonData, null, '    ');
+                    const obj = JSON.parse(datastr);
+                    var sensor_list = obj.map(item=>item["sensorNumber"]);
+                    //jsonのセンサ順を抽出
+                    //    console.log(sensorNumber);
+                    var target = document.getElementById("DateTimeDisp");
+                    var Year = now.getFullYear();
+                    var Month = now.getMonth() + 1;
+                    var Date = now.getDate();
+                    var Hour = now.getHours();
+                    var Min = now.getMinutes();
+                    var Sec = now.getSeconds();
+                    target.innerHTML = Year + "/" + Month + "/" + Date + " " + Hour + ":" + Min + ":" + Sec + " ";
+                    var c = Object.keys(obj).length;
+                    for (var i = 1; i < c + 1; i++) {
+                        var tmpobj = obj.find(s=>s.sensorNumber === sensor_list[i - 1]);
+                        //jsonのセンサ順にセンサ値を読み込み
+                        //console.log(i+': ' + tmpobj.temperature);
+                        if (num == 0) {
+                            data[0].z[i] = tmpobj.temperature;
+                        }
+                        ;if (num == 1) {
+                            data[0].z[i] = tmpobj.relativeHumidity;
+                        }
+                        ;if (num == 2) {
+                            data[0].z[i] = tmpobj.co2;
+                        }
+                        ;if (num == 3) {
+                            var tmp = tmpobj.temperature;
+                            var hum = tmpobj.relativeHumidity;
+                            if (tmp == null || hum == null) {
+                                data[0].z[i] = null;
+                            } else {
+                                data[0].z[i] = Math.round((0.725 * tmp + 0.0368 * hum + 0.00364 * tmp * hum - 3.246) * 10) / 10;
+                            }
+                        }
+                        ;if (num == 4) {
+                            data[0].z[i] = tmpobj.PM2_5;
+                        }
+                        ;if (num == 5) {
+                            data[0].z[i] = tmpobj.tvoc;
+                        }
+                        ;if (num == 6) {
+                            data[0].z[i] = tmpobj.BarometricPressure;
+                        }
+                        ;if (num == 7) {
+                            data[0].z[i] = tmpobj.UVIndex;
+                        }
+                        ;data[2].text[i - 1] = '<span style=\"color: #ffffff; text-shadow: 1px 1px #000000, 1px -1px #000000, -1px 1px #000000, -1px -1px #000000\">' + tmpobj.sensorName + '</b>';
+                    }
+                    Plotly.newPlot('graph', data, layout, {
+                        displayModeBar: true,
+                        scrollZoom: true
+                    });
+                }
+            }
+        }
+    </script>
+    <style type="text/css">
 
     
-    setTimeout(function () {
-        location.reload();
-    }, 300000);
-  }
-}
-</script> 
-
+    
+    
+    IAQ Contour Map
+    
+    </style>
 </head>
-
 <body onload="LoadProc();">
-<div id="graph" align = center></div>
-<div id="DateTimeDisp" align = center></div>
-<table border="1" align = center  style="font-size: 10pt;">
-<caption>Select: </caption><tr>
-<td><a id="tmp" href="IAQMAPv3.html?da=tmp">Temperature</a></td>
-<td><a id="hum" href="IAQMAPv3.html?da=hum">Relative Humidity</a></td>
-<td><a id="co2" href="IAQMAPv3.html?da=co2">CO2</a></td>
-<td><a id="wbgt" href="IAQMAPv3.html?da=wbgt">WBGT</a></td>
-<td><a id="pm25" href="IAQMAPv3.html?da=pm25">PM2.5</a></td>
-<td><a id="voc" href="IAQMAPv3.html?da=voc">VOC Index</a></td>
-<td><a id="press" href="IAQMAPv3.html?da=press">Barometric Pressure</a></td>
-<td><a id="uv" href="IAQMAPv3.html?da=uv">UV Index</a></td>
-</tr></table>
-
+    <table border="0" align=center style="font-size: 8pt;">
+        <tr>
+            <td valign = baseline>
+                <span style = "font-family: fantasy;color:Black;background:#FFF;border: 1px solid #FFF;padding:5px;font-size: 18pt;">IAQ Contour Map</span>
+                <div id="DateTimeDisp" align=center style = "background:white;font-family: fantasy;font-size: 12pt;">0000/00/00 00:00:00 </div>
+            </td>
+            <td valign = baseline>
+                <a id="tmp" href="IAQMAPv3.html?da=tmp" style="background:lightgray;">Temperature</a>
+            </td>
+            <td valign = baseline>
+                <a id="hum" href="IAQMAPv3.html?da=hum" style="background:lightgray;">Relative Humidity</a>
+            </td>
+            <td valign = baseline>
+                <a id="co2" href="IAQMAPv3.html?da=co2" style="background:lightgray;">CO2</a>
+            </td>
+            <td valign = baseline>
+                <a id="wbgt" href="IAQMAPv3.html?da=wbgt" style="background:lightgray;">WBGT</a>
+            </td>
+            <td valign = baseline>
+                <a id="pm25" href="IAQMAPv3.html?da=pm25" style="background:lightgray;">PM2.5</a>
+            </td>
+            <td valign = baseline>
+                <a id="voc" href="IAQMAPv3.html?da=voc" style="background:lightgray;">VOC Index</a>
+            </td>
+            <td valign = baseline>
+                <a id="press" href="IAQMAPv3.html?da=press" style="background:lightgray;">Barometric Pressure</a>
+            </td>
+            <td valign = baseline>
+                <a id="uv" href="IAQMAPv3.html?da=uv" style="background:lightgray;">UV Index</a>
+            </td>
+        </tr>
+    </table>
+        <div id="graph" align=center></div>
 </body>
-
-
